@@ -17,7 +17,7 @@ try:
 
         # Extract the file size and status code from the line
         file_size = int(parts[-1])
-        status_code = int(parts[-2])
+        status_code = parts[-2]
 
         # Update the statistics
         total_file_size += file_size
