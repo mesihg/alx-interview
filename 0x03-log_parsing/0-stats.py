@@ -30,10 +30,9 @@ try:
         if line_count == 10:
             line_count = 0
             print('File size: {}'.format(total_file_size))
-            for status_code, count in sorted(status_codes.items()):
-                if count > 0:
-                    print(f"{status_code}: {count}")
-            print()
+            for key, value in sorted(status_codes.items()):
+                if value != 0:
+                    print('{}: {}'.format(key, value))
 except KeyboardInterrupt:
     pass
 
