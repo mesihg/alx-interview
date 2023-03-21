@@ -5,11 +5,14 @@ Coin change module
 
 
 def makeChange(coins, total):
-    coins.sort(reverse=True)
-    num_coins = 0
-    remaining_amount = total
+    """determine the fewest number of coins
+    needed to meet a given amount total
+    """
+    if not coins or total < 0:
+        return -1
+    dp = [float('inf')] * (total + 1)
+    dp[0] = 0
     for coin in coins:
-        if coin <= remaining_amount:
-            num_coins += remaining_amount // coin
-            remaining_amount %= coin
-    return num_coins
+        for j in range(coin, total + 1):
+            dp[j] = min(dp[j], dp[j - coin] + 1)
+    return dp[total] if dp[total] != float('inf') else -1
