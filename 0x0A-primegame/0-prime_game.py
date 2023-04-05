@@ -3,42 +3,23 @@
 
 
 def isWinner(x, nums):
-    """ Return name of the player that won the most rounds """
-    def dp(state, player):
-        if state.count(True) == 0:
-            return False
-        if player in memo[state]:
-            return memo[state][player]
-        result = False
-        for p in primes:
-            if state[p]:
-                new_state = [True] * len(state)
-                for i in range(p, len(state), p):
-                    new_state[i] = False
-                other_player = not player
-                if not dp(tuple(new_state), other_player):
-                    result = True
-                    break
-        memo[state][player] = result
-        return result
-    max_num = max(nums)
-    sieve = [True] * (max_num + 1)
-    sieve[0] = sieve[1] = False
-    for i in range(2, int(max_num ** 0.5) + 1):
-        if sieve[i]:
-            for j in range(i * i, max_num + 1, i):
-                sieve[j] = False
-    primes = [i for i in range(2, max_num + 1) if sieve[i]]
-    memo = {}
-    wins = {"Maria": 0, "Ben": 0}
-    for n in nums:
-        state = tuple([True] * (n + 1))
-        memo[state] = {}
-        winner = "Maria" if dp(state, True) else "Ben"
-        wins[winner] += 1
-    if wins["Maria"] > wins["Ben"]:
-        return "Maria"
-    elif wins["Ben"] > wins["Maria"]:
-        return "Ben"
-    else:
+    """Returns name of the player that won the most rounds
+    """
+    if x < 1 or not nums:
         return None
+    marias_wins, bens_wins = 0, 0
+    n = max(nums)
+    primes = [True for _ in range(1, n + 1, 1)]
+    primes[0] = False
+    for i, is_prime in enumerate(primes, 1):
+        if i == 1 or not is_prime:
+            continue
+        for j in range(i + i, n + 1, i):
+            primes[j - 1] = False
+    for _, n in zip(range(x), nums):
+        primes_count = len(list(filter(lambda x: x, primes[0: n])))
+        bens_wins += primes_count % 2 == 0
+        marias_wins += primes_count % 2 == 1
+    if marias_wins == bens_wins:
+        return None
+    return 'Maria' if marias_wins > bens_wins else 'Ben'
